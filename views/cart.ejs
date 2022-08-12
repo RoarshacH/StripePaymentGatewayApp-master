@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <!-- Bootstarp-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <!-- Navbar Section -->
+    <header>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="#"><%= title %></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/products">Products</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/cart">Cart</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <script>
+      function sendData(item) {
+        var newItem = JSON.parse(item);
+        fetch("/cart/items", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: newItem.id, name: newItem.name, price: newItem.price }),
+        })
+          .then(function (response) {
+            alert("Item removed from Cart");
+            location.reload();
+            return response.json();
+          })
+          .catch(function (error) {
+            console.log(error);
+            alert("Error");
+          });
+      }
+
+      function clearCart() {
+        fetch("/cart", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then(function (response) {
+            alert("Cart Cleared");
+            location.reload();
+            return response.json();
+          })
+          .catch(function (error) {
+            console.log(error);
+            alert("Error");
+          });
+      }
+
+      function checkout() {
+        fetch("http://localhost:3000/payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (res.ok) return res.json();
+            return res.json().then((json) => Promise.reject(json));
+          })
+          .then(({ url }) => {
+            window.location = url;
+          })
+          .catch((e) => {
+            console.error(e.error);
+            alert(e.error);
+          });
+      }
+    </script>
+
+    <main>
+      <div class="w-100 container">
+        <h1 class="fw-light mb-4 text-center">My Cart</h1>        
+        <div class="col-12 g-3 align-items-center justify-content-center">
+          <!-- <div class="outer-card"> -->
+          <% if(cart == undefined){ %>
+          <div class="alert alert-primary text-center role="alert">There is No Items in the Cart Plese Add Items to Cart</div>
+          <% } else {%> 
+            <div class="alert alert-secondary text-center" role="alert"><b>Total: $<%= cart.total %></b> </div>            
+            <% cart.items.forEach(function(item){ %>
+          <div class="row my-2" data-item-id="<%= item.id %>">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h4><%= item.name %></h4>
+              </div>
+              <div class="pb-3 mx-3 d-flex justify-content-between align-items-center">
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-outline-secondary">$<%= item.price %></button>
+                  <button type="button" class="btn btn-outline-secondary">Quentity: <%= item.quentity %></button>
+                  <button type="button" onclick="sendData('<%= JSON.stringify(item) %>')" class="btn btn-outline-secondary">Remove From Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>          
+          <% }) %>           
+          <p class="lead text-muted text-center">
+            <button type="button mx-2" onclick="clearCart()" class="btn btn-danger">Clear Cart</button>                        
+            <button type="button mx-2" onclick="checkout()" class="btn btn-success">Checkout</button>
+          </p>                    
+        
+          <% }%>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Start -->
+    <!-- <footer>
+      <div class="footer mt-auto py-3 bg-dark">
+        <div class="container text-center">
+          <div class="row"><p id="footer-copyright">Copyright&reg; SMV Dilshan</p></div>
+        </div>
+      </div>
+    </footer> -->
+
+    <!-- JS Scripts -->
+    <script>
+      document.getElementById("footer-copyright").appendChild(document.createTextNode(new Date().getFullYear()));
+    </script>
+    <script>
+      function getItems() {
+        var cart = JSON.parse(localStorage.getItem("cart"));
+        console.log(cart.username);
+        var array = cart.items;
+        $("idusername").text(cart.username);
+        $("cartTotal").html("str");
+        // document.getElementById("idusername").innerHTML = cart.username
+        // document.getElementById("total").innerHTML = "Toral " + cart.total
+        // array.forEach(function(item) {
+        //   var li = document.createElement("li");
+        //   var text = document.createTextNode(item);
+        //   li.appendChild(text);
+        //   document.getElementById("myUl").appendChild(li);
+        // });
+      }
+      getItems();
+    </script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "Mobile Phones": [
+    {
+      "id": 1,
+      "name": "Google Pixel 6",
+      "price": 600,
+      "imgName": "Album 1.png"
+    },
+    {
+      "id": 2,
+      "name": "Iphone 12 Pro Max",
+      "price": 1246,
+      "imgName": "Album 2.png"
+    },
+    {
+      "id": 3,
+      "name": "Samsung galaxy A53 5G",
+      "price": 500,
+      "imgName": "Album 3.png"
+    },
+    {
+      "id": 4,
+      "name": "Iphone 12 mini",
+      "price": 800,
+      "imgName": "Album 4.png"
+    },
+    {
+      "id": 7,
+      "name": "Oppo A 54 5G",
+      "price": 300,
+      "imgName": "Album 5.png"
+    },
+    {
+      "id": 8,
+      "name": "Samsung galaxy S22 Ultra",
+      "price": 1500,
+      "imgName": "Album 6.png"
+    }
+  ],
+  "merch": [
+    {
+      "id": 5,
+      "name": "T-Shirt",
+      "price": 1999,
+      "imgName": "Shirt.png"
+    },
+    {
+      "id": 6,
+      "name": "Coffee Cup",
+      "price": 699,
+      "imgName": "Cofee.png"
+    }
+  
+  ]
+}
